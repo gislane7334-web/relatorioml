@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evolução do Negócio · 01–08 Jun 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0a0b0f;
+    --surface: #12141a;
+    --card: #191c24;
+    --border: #252834;
+    --accent: #7c6bff;
+    --accent2: #ff6b9d;
+    --green: #2de0a5;
+    --yellow: #f5c542;
+    --text: #e8eaf0;
+    --muted: #6b7080;
+    --up: #2de0a5;
+    --down: #ff5f6b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, #12141a 0%, #1a1030 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 36px 40px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(124,107,255,0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .logo-pill {
+    background: rgba(124,107,255,0.15);
+    border: 1px solid rgba(124,107,255,0.35);
+    color: var(--accent);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 100px;
+    display: inline-block;
+    margin-bottom: 14px;
+  }
+  h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(26px, 4vw, 42px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+  h1 span { color: var(--accent); }
+  .period-badge {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .period-badge strong { color: var(--text); display: block; font-size: 14px; }
+
+  /* ── MAIN ── */
+  main { padding: 32px 40px; max-width: 1280px; margin: 0 auto; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title span {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+
+  /* ── KPI GRID ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .kpi-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .kpi-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    border-radius: 0 0 14px 14px;
+  }
+  .kpi-card.purple::after { background: var(--accent); }
+  .kpi-card.green::after  { background: var(--green); }
+  .kpi-card.pink::after   { background: var(--accent2); }
+  .kpi-card.yellow::after { background: var(--yellow); }
+  .kpi-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .kpi-value {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    margin-top: 4px;
+  }
+  .badge.up   { background: rgba(45,224,165,0.12); color: var(--up); }
+  .badge.down { background: rgba(255,95,107,0.12); color: var(--down); }
+  .badge.neutral { background: rgba(107,112,128,0.15); color: var(--muted); }
+
+  /* ── CHARTS ROW ── */
+  .charts-row {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 768px) { .charts-row { grid-template-columns: 1fr; } }
+  .chart-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .chart-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .chart-wrap { position: relative; height: 220px; }
+
+  /* ── TABLE ── */
+  .table-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 36px;
+  }
+  .table-header {
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th {
+    background: var(--surface);
+    padding: 10px 16px;
+    text-align: left;
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    white-space: nowrap;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,107,255,0.04); }
+  .td-num { text-align: right; font-variant-numeric: tabular-nums; }
+  .td-date { color: var(--muted); }
+  .highlight { color: var(--green); font-weight: 600; }
+  .low { color: var(--muted); }
+
+  /* ── TWO COL ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } }
+
+  /* ── INSIGHT BOX ── */
+  .insight-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+  }
+  .insight-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .insight-item {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .insight-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .insight-icon {
+    width: 28px; height: 28px;
+    min-width: 28px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .insight-icon.g { background: rgba(45,224,165,0.12); }
+  .insight-icon.p { background: rgba(124,107,255,0.12); }
+  .insight-icon.y { background: rgba(245,197,66,0.12); }
+  .insight-icon.r { background: rgba(255,95,107,0.12); }
+  .insight-item strong { color: var(--text); }
+
+  /* ── FAIXA PREÇO TABLE ── */
+  .faixa-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 100px;
+    overflow: hidden;
+    margin-top: 6px;
+  }
+  .faixa-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 28px 40px;
+    color: var(--muted);
+    font-size: 11px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+
+  /* ── ANIMATIONS ── */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(16px);
+    animation: fadeUp 0.55s ease forwards;
+  }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in:nth-child(1) { animation-delay: 0.05s; }
+  .fade-in:nth-child(2) { animation-delay: 0.1s; }
+  .fade-in:nth-child(3) { animation-delay: 0.15s; }
+  .fade-in:nth-child(4) { animation-delay: 0.2s; }
+  .fade-in:nth-child(5) { animation-delay: 0.25s; }
+  .fade-in:nth-child(6) { animation-delay: 0.3s; }
+  .fade-in:nth-child(7) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-pill">Dashboard de Negócio</div>
+  <div class="header-top">
+    <div>
+      <h1>Evolução do <span>Negócio</span></h1>
+      <p style="color:var(--muted);font-size:13px;margin-top:8px;">Análise de desempenho · Mercado Livre / Marketplace</p>
+    </div>
+    <div class="period-badge">
+      <strong>01 Jun — 08 Jun 2026</strong>
+      Período analisado (8 dias)
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- KPIs -->
+  <div class="section-title"><span></span>Visão Geral do Período</div>
+  <div class="kpi-grid">
+    <div class="kpi-card purple fade-in">
+      <div class="kpi-label">Vendas Brutas</div>
+      <div class="kpi-value">R$4.100</div>
+      <div class="kpi-sub">total no período</div>
+    </div>
+    <div class="kpi-card green fade-in">
+      <div class="kpi-label">Qtd. de Vendas</div>
+      <div class="kpi-value">25</div>
+      <div class="kpi-sub">pedidos realizados</div>
+    </div>
+    <div class="kpi-card pink fade-in">
+      <div class="kpi-label">Compradores Únicos</div>
+      <div class="kpi-value">25</div>
+      <div class="kpi-sub">todos novos compradores</div>
+    </div>
+    <div class="kpi-card yellow fade-in">
+      <div class="kpi-label">Ticket Médio</div>
+      <div class="kpi-value">R$164</div>
+      <div class="kpi-sub">valor médio por venda</div>
+    </div>
+    <div class="kpi-card purple fade-in">
+      <div class="kpi-label">Total de Visitas</div>
+      <div class="kpi-value">453</div>
+      <div class="kpi-sub">visitantes únicos</div>
+    </div>
+    <div class="kpi-card green fade-in">
+      <div class="kpi-label">Conversão Média</div>
+      <div class="kpi-value">5,52%</div>
+      <div class="kpi-sub">visitas → compras</div>
+    </div>
+    <div class="kpi-card pink fade-in">
+      <div class="kpi-label">Pico de Vendas</div>
+      <div class="kpi-value">07/06</div>
+      <div class="kpi-sub">R$2.257 · 13,24% conversão</div>
+    </div>
+    <div class="kpi-card yellow fade-in">
+      <div class="kpi-label">Cancelamentos</div>
+      <div class="kpi-value">0</div>
+      <div class="kpi-sub">zero devoluções</div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="section-title"><span></span>Desempenho Diário</div>
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Vendas Brutas por Dia (R$)</div>
+      <div class="chart-wrap">
+        <canvas id="chartVendas"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Taxa de Conversão por Dia (%)</div>
+      <div class="chart-wrap">
+        <canvas id="chartConv"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="charts-row">
+    <div class="chart-card">
+      <div class="chart-title">Visitas vs Compradores por Dia</div>
+      <div class="chart-wrap">
+        <canvas id="chartVisitas"></canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Faixa de Preço</div>
+      <div class="chart-wrap">
+        <canvas id="chartFaixa"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLE -->
+  <div class="section-title"><span></span>Detalhamento Diário</div>
+  <div class="table-card">
+    <div class="table-header">Atividade dos Compradores & Desempenho de Vendas</div>
+    <div style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th class="td-num">Visitas</th>
+            <th class="td-num">Compradores</th>
+            <th class="td-num">Vendas Brutas</th>
+            <th class="td-num">Ticket Médio</th>
+            <th class="td-num">Qtd Vendas</th>
+            <th class="td-num">Conversão</th>
+            <th class="td-num">Unid. Vendidas</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-date">01/06</td>
+            <td class="td-num">81</td>
+            <td class="td-num">3</td>
+            <td class="td-num highlight">R$530</td>
+            <td class="td-num">R$176,66</td>
+            <td class="td-num">3</td>
+            <td class="td-num">3,70%</td>
+            <td class="td-num">3</td>
+          </tr>
+          <tr>
+            <td class="td-date">02/06</td>
+            <td class="td-num">94</td>
+            <td class="td-num">5</td>
+            <td class="td-num highlight">R$452</td>
+            <td class="td-num">R$90,46</td>
+            <td class="td-num">5</td>
+            <td class="td-num">5,32%</td>
+            <td class="td-num">5</td>
+          </tr>
+          <tr>
+            <td class="td-date">03/06</td>
+            <td class="td-num">46</td>
+            <td class="td-num">1</td>
+            <td class="td-num highlight">R$353</td>
+            <td class="td-num">R$176,45</td>
+            <td class="td-num">2</td>
+            <td class="td-num">4,35%</td>
+            <td class="td-num">2</td>
+          </tr>
+          <tr>
+            <td class="td-date">04/06</td>
+            <td class="td-num low">1</td>
+            <td class="td-num low">0</td>
+            <td class="td-num low">R$0</td>
+            <td class="td-num low">—</td>
+            <td class="td-num low">0</td>
+            <td class="td-num low">0,00%</td>
+            <td class="td-num low">0</td>
+          </tr>
+          <tr>
+            <td class="td-date">05/06</td>
+            <td class="td-num">29</td>
+            <td class="td-num">1</td>
+            <td class="td-num highlight">R$339</td>
+            <td class="td-num">R$339,01</td>
+            <td class="td-num">1</td>
+            <td class="td-num">3,45%</td>
+            <td class="td-num">1</td>
+          </tr>
+          <tr>
+            <td class="td-date">06/06</td>
+            <td class="td-num">124</td>
+            <td class="td-num">5</td>
+            <td class="td-num highlight">R$169</td>
+            <td class="td-num">R$33,77</td>
+            <td class="td-num">5</td>
+            <td class="td-num">4,03%</td>
+            <td class="td-num">5</td>
+          </tr>
+          <tr style="background: rgba(45,224,165,0.04);">
+            <td class="td-date" style="color:var(--green);">07/06 ⭐</td>
+            <td class="td-num">68</td>
+            <td class="td-num">9</td>
+            <td class="td-num" style="color:var(--green);font-weight:600;">R$2.257</td>
+            <td class="td-num" style="color:var(--green);">R$250,73</td>
+            <td class="td-num">9</td>
+            <td class="td-num" style="color:var(--green);">13,24%</td>
+            <td class="td-num">9</td>
+          </tr>
+          <tr>
+            <td class="td-date">08/06</td>
+            <td class="td-num low">10</td>
+            <td class="td-num low">0</td>
+            <td class="td-num low">R$0</td>
+            <td class="td-num low">—</td>
+            <td class="td-num low">0</td>
+            <td class="td-num low">0,00%</td>
+            <td class="td-num low">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- FAIXAS + TIPO -->
+  <div class="two-col">
+    <div class="insight-box">
+      <div class="insight-title">🏷️ Vendas por Faixa de Preço</div>
+      <table style="width:100%;">
+        <thead>
+          <tr>
+            <th style="text-align:left;">Faixa</th>
+            <th class="td-num">Compradores</th>
+            <th class="td-num">%</th>
+            <th class="td-num">Vendas</th>
+            <th class="td-num">Conv.</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>R$0–29</td>
+            <td class="td-num">1</td>
+            <td class="td-num">3,33%</td>
+            <td class="td-num">R$18</td>
+            <td class="td-num low">0,22%</td>
+          </tr>
+          <tr>
+            <td>R$29–79</td>
+            <td class="td-num">14</td>
+            <td class="td-num">46,67%</td>
+            <td class="td-num highlight">R$469</td>
+            <td class="td-num">3,09%</td>
+          </tr>
+          <tr>
+            <td>R$79–130</td>
+            <td class="td-num">6</td>
+            <td class="td-num">20%</td>
+            <td class="td-num highlight">R$652</td>
+            <td class="td-num">1,32%</td>
+          </tr>
+          <tr>
+            <td>> R$129</td>
+            <td class="td-num">9</td>
+            <td class="td-num">30%</td>
+            <td class="td-num" style="color:var(--accent);font-weight:600;">R$3.263</td>
+            <td class="td-num">1,99%</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:16px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Participação nas Vendas Brutas</div>
+        <div style="margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>R$0–29</span><span>0,4%</span></div>
+          <div class="faixa-bar"><div class="faixa-bar-fill" style="width:0.4%"></div></div>
+        </div>
+        <div style="margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>R$29–79</span><span>11,4%</span></div>
+          <div class="faixa-bar"><div class="faixa-bar-fill" style="width:11.4%"></div></div>
+        </div>
+        <div style="margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:3px;"><span>R$79–130</span><span>15,9%</span></div>
+          <div class="faixa-bar"><div class="faixa-bar-fill" style="width:15.9%"></div></div>
+        </div>
+        <div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--accent);margin-bottom:3px;"><span><strong>> R$129</strong></span><span><strong>79,6%</strong></span></div>
+          <div class="faixa-bar"><div class="faixa-bar-fill" style="width:79.6%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-title">👤 Tipo de Comprador</div>
+      <div style="display:flex;gap:14px;margin-bottom:22px;">
+        <div style="flex:1;background:rgba(45,224,165,0.07);border:1px solid rgba(45,224,165,0.2);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;font-family:'Inter',sans-serif;font-weight:800;color:var(--green);">25</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Novos Compradores</div>
+          <div style="font-size:11px;color:var(--green);margin-top:2px;">100%</div>
+        </div>
+        <div style="flex:1;background:rgba(107,112,128,0.07);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;">
+          <div style="font-size:28px;font-family:'Inter',sans-serif;font-weight:800;color:var(--muted);">0</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:4px;">Compradores Frequentes</div>
+          <div style="font-size:11px;color:var(--muted);margin-top:2px;">0%</div>
+        </div>
+      </div>
+      <div style="background:rgba(124,107,255,0.06);border:1px solid rgba(124,107,255,0.2);border-radius:10px;padding:14px;">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px;">Conversão dos Novos Compradores</div>
+        <div style="font-size:22px;font-family:'Inter',sans-serif;font-weight:700;color:var(--accent);">5,52%</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">Total de vendas brutas: <strong style="color:var(--text);">R$4.100</strong></div>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:rgba(245,197,66,0.06);border:1px solid rgba(245,197,66,0.2);border-radius:10px;font-size:11px;color:var(--muted);line-height:1.6;">
+        💡 <strong style="color:var(--yellow);">Oportunidade de Retenção:</strong> 100% dos compradores são novos. Estratégias de fidelização podem gerar receita recorrente significativa.
+      </div>
+    </div>
+  </div>
+
+  <!-- INSIGHTS & RECOMENDAÇÕES -->
+  <div class="two-col">
+    <div class="insight-box">
+      <div class="insight-title">💡 Principais Insights</div>
+      <div class="insight-item">
+        <div class="insight-icon g">🚀</div>
+        <div><strong>07/06 foi o dia de pico absoluto</strong> — R$2.257 em vendas com conversão de 13,24%, representando 55% de todo o faturamento do período com apenas 68 visitas.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon p">💎</div>
+        <div><strong>Produtos acima de R$129 dominam o faturamento</strong> — 30% dos compradores nessa faixa geraram 79,6% das vendas brutas (R$3.263).</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon y">⚠️</div>
+        <div><strong>04/06 e 08/06 com tráfego muito baixo</strong> — apenas 1 e 10 visitas respectivamente, sem conversão. Pode indicar ausência de mídia paga nesses dias.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon r">📊</div>
+        <div><strong>06/06 teve o maior tráfego (124 visitas)</strong> mas apenas R$169 em vendas — ticket médio de R$33,77 foi o mais baixo do período, sugerindo produtos de entrada ou promoções.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon g">✅</div>
+        <div><strong>Zero cancelamentos e devoluções</strong> no período inteiro — excelente sinal de qualidade percebida e satisfação dos compradores.</div>
+      </div>
+    </div>
+
+    <div class="insight-box">
+      <div class="insight-title">🎯 Recomendações de Ação</div>
+      <div class="insight-item">
+        <div class="insight-icon p">1</div>
+        <div><strong>Investigar o pico de 07/06:</strong> O que gerou a alta conversão (13,24%)? Campanha ativa? Post viral? Identificar a causa e replicar nos próximos fins de semana.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon g">2</div>
+        <div><strong>Manter tráfego mínimo diário:</strong> Dias com &lt;10 visitas indicam ausência de mídia. Programar campanhas contínuas no Meta Ads para garantir fluxo constante.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon y">3</div>
+        <div><strong>Criar programa de fidelização:</strong> 100% dos compradores são novos. Cupons de segunda compra, pós-venda via WhatsApp ou e-mail podem ativar receita recorrente.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon r">4</div>
+        <div><strong>Potencializar produtos premium (&gt;R$129):</strong> São responsáveis por 79,6% das vendas. Destacar esses SKUs nas criativos de anúncio e na vitrine da loja.</div>
+      </div>
+      <div class="insight-item">
+        <div class="insight-icon p">5</div>
+        <div><strong>Analisar 06/06 com cautela:</strong> Alto tráfego mas ticket baixo. Avaliar se a fonte de tráfego (orgânica, paga, promoção) atraiu perfil diferente de comprador.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  Relatório gerado automaticamente · Período: 01/06/2026 – 08/06/2026 · Fonte: Mercado Livre Analytics
+</footer>
+
+<script>
+const days = ['01/06','02/06','03/06','04/06','05/06','06/06','07/06','08/06'];
+const vendas = [530, 452, 353, 0, 339, 169, 2257, 0];
+const conv   = [3.70, 5.32, 4.35, 0.00, 3.45, 4.03, 13.24, 0.00];
+const visitas = [81, 94, 46, 1, 29, 124, 68, 10];
+const compradores = [3, 5, 1, 0, 1, 5, 9, 0];
+
+const defaults = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+};
+
+// Chart 1: Vendas por dia
+new Chart(document.getElementById('chartVendas'), {
+  type: 'bar',
+  data: {
+    labels: days,
+    datasets: [{
+      data: vendas,
+      backgroundColor: vendas.map(v => v === Math.max(...vendas)
+        ? 'rgba(45,224,165,0.85)'
+        : 'rgba(124,107,255,0.55)'),
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    ...defaults,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' } } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' }, callback: v => 'R$'+v } }
+    }
+  }
+});
+
+// Chart 2: Conversão
+new Chart(document.getElementById('chartConv'), {
+  type: 'line',
+  data: {
+    labels: days,
+    datasets: [{
+      data: conv,
+      borderColor: '#ff6b9d',
+      backgroundColor: 'rgba(255,107,157,0.08)',
+      pointBackgroundColor: conv.map(v => v === Math.max(...conv) ? '#2de0a5' : '#ff6b9d'),
+      pointRadius: conv.map(v => v === Math.max(...conv) ? 7 : 4),
+      tension: 0.4,
+      fill: true,
+    }]
+  },
+  options: {
+    ...defaults,
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' } } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' }, callback: v => v+'%' } }
+    }
+  }
+});
+
+// Chart 3: Visitas vs Compradores
+new Chart(document.getElementById('chartVisitas'), {
+  type: 'bar',
+  data: {
+    labels: days,
+    datasets: [
+      {
+        label: 'Visitas',
+        data: visitas,
+        backgroundColor: 'rgba(124,107,255,0.45)',
+        borderRadius: 4,
+      },
+      {
+        label: 'Compradores',
+        data: compradores,
+        backgroundColor: 'rgba(45,224,165,0.75)',
+        borderRadius: 4,
+      }
+    ]
+  },
+  options: {
+    ...defaults,
+    plugins: { legend: { display: true, labels: { color: '#6b7080', font: { size: 10, family: 'Inter' }, boxWidth: 10, boxHeight: 10 } } },
+    scales: {
+      x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' } } },
+      y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#6b7080', font: { size: 10, family: 'Inter' } } }
+    }
+  }
+});
+
+// Chart 4: Faixa de preço (donut)
+new Chart(document.getElementById('chartFaixa'), {
+  type: 'doughnut',
+  data: {
+    labels: ['R$0–29','R$29–79','R$79–130','> R$129'],
+    datasets: [{
+      data: [18, 469, 652, 3263],
+      backgroundColor: ['rgba(107,112,128,0.6)','rgba(124,107,255,0.7)','rgba(255,107,157,0.7)','rgba(45,224,165,0.85)'],
+      borderColor: '#191c24',
+      borderWidth: 3,
+    }]
+  },
+  options: {
+    ...defaults,
+    cutout: '65%',
+    plugins: {
+      legend: {
+        display: true,
+        position: 'bottom',
+        labels: { color: '#6b7080', font: { size: 10, family: 'Inter' }, boxWidth: 10, boxHeight: 10, padding: 10 }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
